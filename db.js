@@ -1,4 +1,4 @@
 module.exports = {
-    DB_URL: 'YOUR_MONGODB_URL',
+    DB_URL: 'mongodb+srv://khawarsalman:Ozv15RxPy3B2BENq@google-search.od5xihm.mongodb.net/airbnb',
     SESSION_SECRET: 'YOUR_SECRET'
 }
