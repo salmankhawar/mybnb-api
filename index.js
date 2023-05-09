@@ -11,6 +11,8 @@ const Users = require('./models/users')
 const Bookings = require('./models/bookings')
 const Houses = require('./models/houses')
 const Reviews = require('./models/reviews')
+const bcrypt = require('bcrypt')
+const saltRounds = 10
 
 // Build the App
 const app = express()
@@ -123,16 +125,26 @@ app.post('/login', async (req, res) => {
 
 // POST /signup
 app.post('/signup', async (req, res) => {
-  if (
-    await Users.findOne({
-      email: req.body.email,
-    })
-  ) {
-    res.send('User with this email already exists')
-  } else {
-    let user = await Users.create(req.body)
-    res.send(user)
-    return user
+  try {
+    if (
+      await Users.findOne({
+        email: req.body.email,
+      })
+    ) {
+      res.send('User with this email already exists')
+    } else {
+      let hashedPassword = bcrypt.hashSync(req.body.password, saltRounds)
+      let user = await Users.create({
+        name: req.body.name,
+        email: req.body.email,
+        avatar: req.body.avatar,
+        password: hashedPassword,
+      })
+      res.send(user)
+      return user
+    }
+  } catch (err) {
+    console.log(err)
   }
 })
 
