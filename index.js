@@ -119,8 +119,27 @@ app.patch('/profile', async (req, res) => {
 
 // POST /login
 app.post('/login', async (req, res) => {
-  console.log(req.body)
-  res.send('Hello from Login')
+  const findUser = await Users.findOne({
+    email: req.body.email,
+  })
+
+  if (!findUser) {
+    res.send('invalid email')
+    return
+  }
+
+  const checkPass = bcrypt.compareSync(req.body.password, findUser.password)
+  if (!checkPass) {
+    res.send('invalid password')
+    return
+  }
+
+  req.login(findUser, (err) => {
+    if (err) {
+      throw err
+    }
+    res.send(req.user.email)
+  })
 })
 
 // POST /signup
@@ -133,15 +152,16 @@ app.post('/signup', async (req, res) => {
     ) {
       res.send('User with this email already exists')
     } else {
-      let hashedPassword = bcrypt.hashSync(req.body.password, saltRounds)
       let user = await Users.create({
         name: req.body.name,
         email: req.body.email,
         avatar: req.body.avatar,
-        password: hashedPassword,
+        password: bcrypt.hashSync(req.body.password, saltRounds),
       })
-      res.send(user)
-      return user
+
+      req.login(user, () => {
+        res.send(user)
+      })
     }
   } catch (err) {
     console.log(err)
@@ -149,9 +169,19 @@ app.post('/signup', async (req, res) => {
 })
 
 // GET /logout
-app.get('/logout', async (req, res) => {
-  console.log(req.body)
-  res.send('Hello from Logout')
+app.get('/logout', (req, res) => {
+  req.logout(function (err) {
+    if (err) {
+      return next(err)
+    }
+    req.session.destroy(function (err) {
+      if (err) {
+        return next(err)
+      }
+      res.clearCookie('connect.sid')
+      res.send('Logged out')
+    })
+  })
 })
 
 // Catch 404 and forward to error handler
