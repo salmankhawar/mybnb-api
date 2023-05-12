@@ -65,20 +65,31 @@ app.get('/houses/:id', async (req, res) => {
 
 // POST /houses
 app.post('/houses', async (req, res) => {
-  console.log(req.body)
-  res.send('Hello from Houses')
+  if (!req.isAuthenticated()) {
+    res.send('not authorized')
+  } else {
+    req.body.host = req.user._id
+    let house = await Houses.create(req.body)
+    res.send(house)
+  }
 })
 
 // PATCH /houses/:id
 app.patch('/houses/:id', async (req, res) => {
-  console.log(req.body)
-  res.send('Hello from Houses/ID')
+  if (!req.isAuthenticated()) {
+    res.send('not authorized')
+  } else {
+    res.send('Hello from Houses')
+  }
 })
 
 // DELETE /houses/:id
 app.delete('/houses/:id', async (req, res) => {
-  console.log(req.body)
-  res.send('Hello from Houses/ID')
+  if (!req.isAuthenticated()) {
+    res.send('not authorized')
+  } else {
+    res.send('Hello from Houses')
+  }
 })
 
 // GET /bookings
@@ -89,8 +100,11 @@ app.get('/bookings', async (req, res) => {
 
 // POST /bookings
 app.post('/bookings', async (req, res) => {
-  console.log(req.body)
-  res.send('Hello from Bookings')
+  if (!req.isAuthenticated()) {
+    res.send('not authorized')
+  } else {
+    res.send('Hello from Bokkings')
+  }
 })
 
 // GET /reviews
@@ -101,20 +115,29 @@ app.get('/review', async (req, res) => {
 
 // POST /reviews
 app.post('/reviews', async (req, res) => {
-  console.log(req.body)
-  res.send('Hello from Reviews')
+  if (!req.isAuthenticated()) {
+    res.send('not authorized')
+  } else {
+    res.send('Hello from Reviews')
+  }
 })
 
 // GET /profile
 app.get('/profile', async (req, res) => {
-  console.log(req.body)
-  res.send('Heloo from Profile')
+  if (!req.isAuthenticated()) {
+    res.send('not authorized')
+  } else {
+    res.send('Hello from profile')
+  }
 })
 
 // PATCH /profile
 app.patch('/profile', async (req, res) => {
-  console.log(req.body)
-  res.send('Hello from Profile')
+  if (!req.isAuthenticated()) {
+    res.send('not authorized')
+  } else {
+    res.send('Hello from Profile')
+  }
 })
 
 // POST /login
