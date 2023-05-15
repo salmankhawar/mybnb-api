@@ -53,8 +53,22 @@ app.get('/', async (req, res) => {
 
 // GET /houses
 app.get('/houses', async (req, res) => {
-  console.log(req.query)
-  res.send('Hello from Houses')
+  let search = {}
+  if (req.body.name) {
+    search.title = { $regex: req.body.name }
+  }
+  if (req.body.location) {
+    search.location = req.body.location
+  }
+  if (req.body.rooms) {
+    search.rooms = req.body.rooms
+  }
+  if (req.body.price) {
+    search.price = { $lte: req.body.price }
+  }
+
+  let houses = await Houses.find(search).sort(req.body.sort || 'price')
+  res.send(houses)
 })
 
 // GET /houses/:id
