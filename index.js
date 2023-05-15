@@ -59,8 +59,11 @@ app.get('/houses', async (req, res) => {
 
 // GET /houses/:id
 app.get('/houses/:id', async (req, res) => {
-  console.log(req.query)
-  res.send('Hello from Houses/ID')
+  let house = await Houses.findById(req.params.id).populate({
+    path: 'host',
+    select: 'name avatar',
+  })
+  res.send(house)
 })
 
 // POST /houses
