@@ -54,20 +54,20 @@ app.get('/', async (req, res) => {
 // GET /houses
 app.get('/houses', async (req, res) => {
   let search = {}
-  if (req.body.name) {
-    search.title = { $regex: req.body.name }
+  if (req.query.name) {
+    search.title = { $regex: req.query.name }
   }
-  if (req.body.location) {
-    search.location = req.body.location
+  if (req.query.location) {
+    search.location = req.query.location
   }
-  if (req.body.rooms) {
-    search.rooms = req.body.rooms
+  if (req.query.rooms) {
+    search.rooms = req.query.rooms
   }
-  if (req.body.price) {
-    search.price = { $lte: req.body.price }
+  if (req.query.price) {
+    search.price = { $lte: req.query.price }
   }
 
-  let houses = await Houses.find(search).sort(req.body.sort || 'price')
+  let houses = await Houses.find(search).sort(req.query.sort || 'price')
   res.send(houses)
 })
 
@@ -120,7 +120,15 @@ app.post('/bookings', async (req, res) => {
   if (!req.isAuthenticated()) {
     res.send('not authorized')
   } else {
-    res.send('Hello from Bokkings')
+    try {
+      console.log(req.body)
+      req.body.author = req.user._id
+      // req.body.house = req.params.id
+      let booking = await Bookings.create(req.body)
+      res.send(booking)
+    } catch (err) {
+      console.log(err)
+    }
   }
 })
 
