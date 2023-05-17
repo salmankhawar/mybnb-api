@@ -142,9 +142,13 @@ app.post('/bookings', async (req, res) => {
 })
 
 // GET /reviews
-app.get('/review', async (req, res) => {
-  console.log(req.body)
-  res.send('Hello from Reviews')
+app.get('/reviews', async (req, res) => {
+  try {
+    let review = await Reviews.find({ house: req.query.house })
+    res.send(review)
+  } catch (err) {
+    throw err
+  }
 })
 
 // POST /reviews
@@ -152,7 +156,9 @@ app.post('/reviews', async (req, res) => {
   if (!req.isAuthenticated()) {
     res.send('not authorized')
   } else {
-    res.send('Hello from Reviews')
+    req.body.author = req.user._id
+    let review = await Reviews.create(req.body)
+    res.send(review)
   }
 })
 
