@@ -111,8 +111,19 @@ app.delete('/houses/:id', async (req, res) => {
 
 // GET /bookings
 app.get('/bookings', async (req, res) => {
-  console.log(req.body)
-  res.send('Hello from Bookings')
+  if (!req.isAuthenticated()) {
+    res.send('not authorized')
+  } else {
+    try {
+      let booking = await Bookings.findOne({
+        house: req.query.house,
+        author: req.user._id,
+      })
+      booking ? res.send(booking) : res.send('invalid')
+    } catch (err) {
+      console.log(err)
+    }
+  }
 })
 
 // POST /bookings
@@ -121,9 +132,7 @@ app.post('/bookings', async (req, res) => {
     res.send('not authorized')
   } else {
     try {
-      console.log(req.body)
       req.body.author = req.user._id
-      // req.body.house = req.params.id
       let booking = await Bookings.create(req.body)
       res.send(booking)
     } catch (err) {
