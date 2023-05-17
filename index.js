@@ -144,7 +144,7 @@ app.post('/bookings', async (req, res) => {
 // GET /reviews
 app.get('/reviews', async (req, res) => {
   try {
-    let review = await Reviews.find({ house: req.query.house })
+    let review = await Reviews.find(req.query.house._id)
     res.send(review)
   } catch (err) {
     throw err
