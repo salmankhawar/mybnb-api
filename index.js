@@ -167,7 +167,9 @@ app.get('/profile', async (req, res) => {
   if (!req.isAuthenticated()) {
     res.send('not authorized')
   } else {
-    res.send('Hello from profile')
+    let user = await Users.findById(req.user._id).select('name email avatar')
+    console.log(user)
+    res.send(user)
   }
 })
 
