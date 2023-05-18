@@ -168,7 +168,6 @@ app.get('/profile', async (req, res) => {
     res.send('not authorized')
   } else {
     let user = await Users.findById(req.user._id).select('name email avatar')
-    console.log(user)
     res.send(user)
   }
 })
@@ -178,7 +177,11 @@ app.patch('/profile', async (req, res) => {
   if (!req.isAuthenticated()) {
     res.send('not authorized')
   } else {
-    res.send('Hello from Profile')
+    let user = await Users.findByIdAndUpdate(req.user._id, req.body, {
+      new: true,
+    }).select('name email avatar')
+    console.log(user)
+    res.send(user)
   }
 })
 
