@@ -66,8 +66,12 @@ app.get('/houses', async (req, res) => {
   if (req.query.price) {
     search.price = { $lte: req.query.price }
   }
-
+  if (req.query.user) {
+    search.host = req.query.user
+  }
+  console.log(req.query)
   let houses = await Houses.find(search).sort(req.query.sort || 'price')
+  console.log(search)
   res.send(houses)
 })
 
@@ -180,7 +184,6 @@ app.patch('/profile', async (req, res) => {
     let user = await Users.findByIdAndUpdate(req.user._id, req.body, {
       new: true,
     }).select('name email avatar')
-    console.log(user)
     res.send(user)
   }
 })

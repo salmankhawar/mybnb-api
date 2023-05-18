@@ -28,6 +28,11 @@ let Houses = mongoose.model('houses', {
     type: String,
     required: true,
   },
+  updated: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
 })
 
 module.exports = Houses
