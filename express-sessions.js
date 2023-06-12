@@ -3,9 +3,9 @@ const LocalStrategy = require('passport-local').Strategy
 const session = require('express-session')
 const MongoDBStore = require('connect-mongodb-session')(session)
 const Users = require('./models/users')
-const { DB_URL, SESSION_SECRET } = require('./db')
+require('dotenv').config()
 
-module.exports = app => {
+module.exports = (app) => {
   passport.serializeUser((user, done) => {
     done(null, user)
   })
@@ -28,27 +28,27 @@ module.exports = app => {
   )
 
   const sessionStore = new MongoDBStore({
-    uri: DB_URL,
-    collection: 'sessions'
+    uri: process.env.MONGODB_URL,
+    collection: 'sessions',
   })
 
   app.use(
     session({
-      secret: SESSION_SECRET,
+      secret: process.env.SESSION_SECRET,
       resave: false,
       saveUninitialized: false,
       rolling: true,
       unset: 'destroy',
       store: sessionStore,
       cookie: {
-        maxAge: 7 * 24 * 60 * 60 * 1000 // 1 week in milliseconds
-      }
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week in milliseconds
+      },
     })
   )
 
   app.use(
     passport.initialize({
-      userProperty: 'user'
+      userProperty: 'user',
     })
   )
   app.use(passport.session())

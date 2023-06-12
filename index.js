@@ -1,4 +1,5 @@
 // Require Packages
+require('dotenv').config()
 const createError = require('http-errors')
 const express = require('express')
 const bodyParser = require('body-parser')
@@ -6,7 +7,6 @@ const cookieParser = require('cookie-parser')
 const logger = require('morgan')
 const mongoose = require('mongoose')
 const cors = require('cors')
-const { DB_URL } = require('./db')
 const Users = require('./models/users')
 const Bookings = require('./models/bookings')
 const Houses = require('./models/houses')
@@ -22,7 +22,7 @@ app.use(logger('tiny'))
 app.use(
   cors({
     credentials: true,
-    origin: 'http://localhost:3000',
+    origin: process.env.FE_URL,
   })
 )
 app.use(express.json())
@@ -33,7 +33,7 @@ app.use(cookieParser())
 
 // Database
 mongoose.connect(
-  DB_URL,
+  process.env.MONGODB_URL,
   { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false },
   () => {
     console.log('Connected to MongoDB')
