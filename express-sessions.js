@@ -44,6 +44,7 @@ module.exports = (app) => {
         maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week in milliseconds
         sameSite: 'none',
         secure: true,
+        domain: '.onrender.com',
       },
     })
   )
