@@ -16,6 +16,7 @@ const saltRounds = 10
 
 // Build the App
 const app = express()
+app.set('trust proxy', 1)
 
 // Middleware
 app.use(logger('tiny'))
