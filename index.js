@@ -70,7 +70,6 @@ app.get('/houses', async (req, res) => {
   if (req.query.user) {
     search.host = req.query.user
   }
-  console.log(req.query)
   let houses = await Houses.find(search).sort(req.query.sort || 'price')
   console.log(search)
   res.send(houses)
